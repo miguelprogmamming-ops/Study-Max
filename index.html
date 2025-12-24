@@ -1,4 +1,4 @@
-oonly <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -990,11 +990,26 @@ oonly <!DOCTYPE html>
       model: "deepseek/deepseek-r1-0528:free"
     };
 
-    const FALLBACK_API = {
-      url: "https://api.hyperbolic.xyz/v1/chat/completions",
-      model: "meta-llama/Llama-3.3-70B-Instruct",
-      key: "none"
-    };
+    const FALLBACK_APIS = [
+      {
+        name: "Hyperbolic",
+        url: "https://api.hyperbolic.xyz/v1/chat/completions",
+        model: "meta-llama/Llama-3.3-70B-Instruct",
+        key: "none"
+      },
+      {
+        name: "Together AI Free",
+        url: "https://api.together.xyz/v1/chat/completions",
+        model: "meta-llama/Llama-3-70b-chat-hf",
+        key: "none"
+      },
+      {
+        name: "Groq",
+        url: "https://api.groq.com/openai/v1/chat/completions",
+        model: "llama-3.1-70b-versatile",
+        key: "none"
+      }
+    ];
 
     // Storage
     let courses = JSON.parse(localStorage.getItem('studymate_courses') || '[]');
@@ -1328,21 +1343,31 @@ Generate a course with EXACTLY this structure in valid JSON format:
 Ensure the content is educational, accurate, and appropriate for the ${level} level. Return ONLY valid JSON, no additional text.`;
 
         let courseData;
+        let apiUsed = "Primary API";
         try {
-          console.log('[v0] Attempting primary API (OpenRouter)...');
           courseData = await callAPI(PRIMARY_API, prompt);
-          console.log('[v0] Primary API succeeded');
         } catch (primaryError) {
-          console.log('[v0] Primary API failed, trying fallback (Hyperbolic)...', primaryError.message);
-          try {
-            courseData = await callAPI(FALLBACK_API, prompt);
-            console.log('[v0] Fallback API succeeded');
-            setTimeout(() => {
-              alert('Note: Using free fallback API for generation');
-            }, 500);
-          } catch (fallbackError) {
-            console.error('[v0] Both APIs failed:', fallbackError);
-            throw new Error('Both primary and fallback APIs failed. Please try again later.');
+          console.warn('Primary API failed:', primaryError.message);
+          
+          let lastError = primaryError;
+          for (let i = 0; i < FALLBACK_APIS.length; i++) {
+            const fallbackAPI = FALLBACK_APIS[i];
+            try {
+              console.log(`Attempting fallback API ${i + 1}: ${fallbackAPI.name}...`);
+              courseData = await callAPI(fallbackAPI, prompt);
+              apiUsed = fallbackAPI.name;
+              setTimeout(() => {
+                alert(`Note: Using ${fallbackAPI.name} (free API) for generation`);
+              }, 500);
+              break;
+            } catch (fallbackError) {
+              console.warn(`Fallback API ${fallbackAPI.name} failed:`, fallbackError.message);
+              lastError = fallbackError;
+            }
+          }
+          
+          if (!courseData) {
+            throw new Error(`All APIs failed. Last error: ${lastError.message}. Please check your internet connection and try again.`);
           }
         }
 
@@ -1389,32 +1414,47 @@ Ensure the content is educational, accurate, and appropriate for the ${level} le
         headers['Authorization'] = `Bearer ${apiConfig.key}`;
       }
 
-      const response = await fetch(apiConfig.url, {
-        method: 'POST',
-        headers: headers,
-        body: JSON.stringify({
-          model: apiConfig.model,
-          messages: [{ role: 'user', content: prompt }],
-          temperature: 0.7,
-          max_tokens: 16000
-        })
-      });
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 90000); // 90 second timeout
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`API error (${response.status}): ${errorText}`);
+      try {
+        const response = await fetch(apiConfig.url, {
+          method: 'POST',
+          headers: headers,
+          signal: controller.signal,
+          body: JSON.stringify({
+            model: apiConfig.model,
+            messages: [{ role: 'user', content: prompt }],
+            temperature: 0.7,
+            max_tokens: 16000
+          })
+        });
+
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`API error (${response.status}): ${errorText.substring(0, 200)}`);
+        }
+
+        const data = await response.json();
+        let content = data.choices[0].message.content;
+
+        const jsonMatch = content.match(/\{[\s\S]*\}/);
+        if (!jsonMatch) {
+          throw new Error('No valid JSON found in response');
+        }
+
+        return JSON.parse(jsonMatch[0]);
+      } catch (error) {
+        clearTimeout(timeoutId);
+        if (error.name === 'AbortError') {
+          throw new Error('Request timed out after 90 seconds');
+        }
+        throw error;
       }
-
-      const data = await response.json();
-      let content = data.choices[0].message.content;
-
-      const jsonMatch = content.match(/\{[\s\S]*\}/);
-      if (!jsonMatch) {
-        throw new Error('No valid JSON found in response');
-      }
-
-      return JSON.parse(jsonMatch[0]);
     }
   </script>
 </body>
 </html>
+
