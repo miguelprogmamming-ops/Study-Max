@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Study Max - AI Learning Platform</title>
+  <title>Study Max - AI Course Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * {
       margin: 0;
@@ -12,494 +13,336 @@
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: #ffffff;
-      color: #000000;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f5f5f7;
+      color: #1d1d1f;
       line-height: 1.6;
-      min-height: 100vh;
     }
 
-    /* Clean black and white header */
-    header {
-      background: #000000;
-      padding: 1.5rem 3rem;
+    .header {
+      background: white;
+      padding: 20px 40px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      position: sticky;
-      top: 0;
-      z-index: 1000;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
 
-    .logo {
+    .logo-section {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      gap: 12px;
     }
 
     .logo-icon {
-      width: 52px;
-      height: 52px;
-      background: #ffffff;
+      width: 48px;
+      height: 48px;
+      background: #1d1d1f;
       border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 28px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      font-size: 24px;
     }
 
     .logo-text {
-      font-family: 'Georgia', serif;
-      font-size: 1.85rem;
-      font-weight: 700;
-      color: #ffffff;
+      font-family: 'DM Serif Display', serif;
+      font-size: 32px;
+      font-weight: 400;
+      color: #1d1d1f;
     }
 
     .header-actions {
       display: flex;
-      gap: 1rem;
+      gap: 24px;
       align-items: center;
     }
 
-    /* Monochrome button styles */
-    .header-btn {
-      padding: 0.65rem 1.5rem;
-      background: #ffffff;
-      color: #000000;
-      border: 2px solid #ffffff;
-      font-size: 0.9rem;
+    .library-btn {
+      background: transparent;
+      border: none;
+      color: #1d1d1f;
+      font-size: 14px;
       font-weight: 600;
+      letter-spacing: 0.5px;
       cursor: pointer;
-      border-radius: 8px;
-      transition: all 0.3s;
+      padding: 8px 0;
     }
 
-    .header-btn:hover {
-      background: #000000;
-      color: #ffffff;
-      transform: translateY(-2px);
-    }
-
-    .action-badge {
+    .action-indicator {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      padding: 0.5rem 1rem;
-      background: #ffffff;
-      border-radius: 8px;
-      color: #000000;
-      font-size: 0.8rem;
-      font-weight: 700;
-      border: 2px solid #000000;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #8e8e93;
     }
 
     .action-dot {
       width: 8px;
       height: 8px;
-      background: #000000;
+      background: #ff3b30;
       border-radius: 50%;
     }
 
-    /* Enhanced header with glassmorphism */
-    /* This original style block was removed in the updates */
-
-    /* Improved main container with better spacing */
-    /* Clean white layout */
     .main-container {
       max-width: 1400px;
       margin: 0 auto;
-      padding: 2.5rem 3rem;
+      padding: 60px 40px;
       display: grid;
-      grid-template-columns: 480px 1fr;
-      gap: 2.5rem;
-      min-height: calc(100vh - 100px);
+      grid-template-columns: 500px 1fr;
+      gap: 60px;
+      align-items: start;
     }
 
-    /* Enhanced synthesis panel with glassmorphism */
-    /* Minimal synthesis panel with black borders */
-    .synthesis-panel {
-      background: #ffffff;
-      border: 2px solid #000000;
-      border-radius: 16px;
-      padding: 2.5rem;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-      height: fit-content;
-      position: sticky;
-      top: 120px;
-      border: 1px solid rgba(255, 255, 255, 0.5); /* This line from original is retained as it doesn't conflict */
+    .form-panel {
+      background: white;
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     }
 
     .panel-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 2rem;
-      padding-bottom: 1rem;
-      border-bottom: 2px solid #000000;
+      margin-bottom: 32px;
     }
 
     .panel-title {
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 2px;
-      color: #000000;
+      font-size: 14px;
+      font-weight: 600;
+      color: #5e5ce6;
+      letter-spacing: 1.2px;
       text-transform: uppercase;
     }
 
     .lightning-icon {
-      font-size: 1.5rem;
-      animation: glow 2s ease-in-out infinite; /* This animation was kept from original */
-    }
-
-    @keyframes glow {
-      0%, 100% { 
-        filter: drop-shadow(0 0 6px rgba(251, 191, 36, 0.6));
-        transform: scale(1);
-      }
-      50% { 
-        filter: drop-shadow(0 0 12px rgba(251, 191, 36, 1));
-        transform: scale(1.15);
-      }
+      font-size: 24px;
+      color: #5e5ce6;
     }
 
     .form-group {
-      margin-bottom: 1.75rem;
+      margin-bottom: 28px;
     }
 
     .form-label {
       display: block;
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      color: #666666;
+      font-size: 11px;
+      font-weight: 600;
+      color: #8e8e93;
+      letter-spacing: 1px;
       text-transform: uppercase;
-      margin-bottom: 0.75rem;
+      margin-bottom: 10px;
     }
 
-    /* Enhanced input fields with better focus states */
-    /* Clean input fields with black borders */
-    .form-input {
+    .form-input,
+    .form-textarea,
+    .form-select {
       width: 100%;
-      padding: 1rem 1.25rem;
-      border: 2px solid #000000;
-      border-radius: 8px;
-      font-size: 1rem;
-      transition: all 0.3s;
-      background: #ffffff;
-      font-family: inherit;
-      color: #000000;
+      padding: 14px 18px;
+      border: 1px solid #e5e5ea;
+      border-radius: 12px;
+      font-size: 16px;
+      font-family: 'Inter', sans-serif;
+      color: #1d1d1f;
+      background: white;
+      transition: all 0.2s;
     }
 
-    .form-input:focus {
+    .form-input:focus,
+    .form-textarea:focus,
+    .form-select:focus {
       outline: none;
-      border-color: #000000;
-      box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
-      transform: translateY(-2px); /* Retained from original */
+      border-color: #5e5ce6;
+      box-shadow: 0 0 0 3px rgba(94, 92, 230, 0.1);
     }
 
-    textarea.form-input {
+    .form-textarea {
+      min-height: 100px;
       resize: vertical;
-      min-height: 120px;
-      font-family: inherit;
     }
 
-    select.form-input {
-      cursor: pointer;
-      appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23000000' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 1rem center;
-      padding-right: 2.5rem;
-    }
-
-    /* Enhanced button with better hover effects */
-    /* Bold black button */
     .synthesize-btn {
       width: 100%;
-      padding: 1.35rem;
-      background: #000000;
-      color: #ffffff;
-      border: 2px solid #000000;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      letter-spacing: 2px;
+      padding: 18px;
+      background: #1d1d1f;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 1px;
       text-transform: uppercase;
       cursor: pointer;
-      transition: all 0.3s;
-    }
-
-    .synthesize-btn::before { /* This animation was kept from original */
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-      transition: left 0.5s;
-    }
-
-    .synthesize-btn:hover:not(:disabled)::before { /* This animation was kept from original */
-      left: 100%;
+      transition: all 0.2s;
+      margin-top: 12px;
     }
 
     .synthesize-btn:hover:not(:disabled) {
-      background: #ffffff;
-      color: #000000;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+      background: #2d2d2f;
+      transform: translateY(-1px);
     }
 
     .synthesize-btn:disabled {
       opacity: 0.5;
       cursor: not-allowed;
-      transform: none;
     }
 
-    /* Enhanced archive panel with better background */
-    /* Clean archive panel */
-    .archive-panel {
-      display: flex;
-      flex-direction: column;
-      background: #ffffff;
-      border: 2px solid #000000;
-      border-radius: 16px;
-      padding: 2.5rem;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.5); /* This line from original is retained as it doesn't conflict */
+    .content-panel {
       min-height: 600px;
-    }
-
-    .archive-empty {
-      flex: 1;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
+    }
+
+    .empty-state {
       text-align: center;
-      padding: 3rem;
+      max-width: 400px;
     }
 
-    .archive-icon {
-      width: 140px;
-      height: 140px;
-      background: #f5f5f5;
-      border: 2px solid #000000;
-      border-radius: 16px;
-      margin-bottom: 2rem;
+    .empty-icon {
+      width: 120px;
+      height: 120px;
+      background: white;
+      border-radius: 24px;
+      margin: 0 auto 32px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 56px;
-      color: #000000;
-      box-shadow: inset 0 2px 12px rgba(0, 0, 0, 0.08); /* This line from original is retained as it doesn't conflict */
-      animation: float 3s ease-in-out infinite; /* This animation was kept from original */
+      font-size: 48px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
     }
 
-    @keyframes float { /* This animation was kept from original */
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-5px); }
+    .empty-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 36px;
+      color: #1d1d1f;
+      margin-bottom: 16px;
+      font-weight: 400;
     }
 
-    .archive-title {
-      font-family: 'Georgia', serif;
-      font-size: 2.75rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
-      color: #000000;
+    .empty-text {
+      font-size: 16px;
+      color: #8e8e93;
+      line-height: 1.6;
     }
 
-    .archive-subtitle {
-      font-size: 1.15rem;
-      color: #666666;
-      max-width: 450px;
-      line-height: 1.7;
+    .loading-state {
+      display: none;
+      text-align: center;
+    }
+
+    .spinner {
+      width: 48px;
+      height: 48px;
+      border: 4px solid #e5e5ea;
+      border-top-color: #5e5ce6;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .loading-text {
+      font-size: 16px;
+      color: #8e8e93;
     }
 
     .courses-grid {
-      display: grid;
-      gap: 1.5rem;
+      display: none;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 24px;
     }
 
-    /* Enhanced course cards with better hover effects */
-    /* Minimal course cards */
     .course-card {
-      background: #ffffff;
-      border: 2px solid #000000;
-      border-radius: 12px;
-      padding: 2rem;
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
       cursor: pointer;
-      transition: all 0.3s;
-      position: relative; /* Retained from original */
-      overflow: hidden; /* Retained from original */
-    }
-
-    .course-card::before { /* This animation was kept from original */
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-      transform: scaleX(0);
-      transition: transform 0.3s;
-    }
-
-    .course-card:hover::before { /* This animation was kept from original */
-      transform: scaleX(1);
+      transition: all 0.2s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     }
 
     .course-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-    }
-
-    .course-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: start;
-      margin-bottom: 1rem;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
     }
 
     .course-title {
-      font-size: 1.35rem;
-      font-weight: 700;
-      color: #000000;
-      margin-bottom: 0.5rem;
-      line-height: 1.4;
+      font-size: 20px;
+      font-weight: 600;
+      color: #1d1d1f;
+      margin-bottom: 8px;
     }
 
-    .course-badge {
-      padding: 0.35rem 0.85rem;
-      background: #000000;
-      color: #ffffff;
-      border-radius: 6px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: capitalize;
-      box-shadow: 0 3px 10px rgba(102, 126, 234, 0.35); /* This shadow was kept from original */
-      white-space: nowrap;
-    }
-
-    .course-desc {
-      color: #666666;
-      font-size: 0.98rem;
-      margin-bottom: 1.25rem;
-      line-height: 1.6;
+    .course-description {
+      font-size: 14px;
+      color: #8e8e93;
+      margin-bottom: 16px;
     }
 
     .course-meta {
       display: flex;
-      gap: 1.75rem;
-      font-size: 0.88rem;
-      color: #999999;
-      font-weight: 500;
+      gap: 16px;
+      font-size: 12px;
+      color: #8e8e93;
     }
 
-    .course-meta span {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-    }
-
-    /* Enhanced detail view */
-    .course-detail-view {
-      background: transparent;
-      border-radius: 0;
-      padding: 0;
-      max-height: calc(100vh - 180px);
-      overflow-y: auto;
-      scrollbar-width: thin;
-      scrollbar-color: #000000 #f5f5f5;
-    }
-
-    .course-detail-view::-webkit-scrollbar {
-      width: 8px;
-    }
-
-    .course-detail-view::-webkit-scrollbar-track {
-      background: #f5f5f5;
-      border-radius: 4px;
-    }
-
-    .course-detail-view::-webkit-scrollbar-thumb {
-      background: #000000;
-      border-radius: 4px;
+    .course-detail {
+      display: none;
+      background: white;
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     }
 
     .detail-header {
-      margin-bottom: 2rem;
-      padding-bottom: 1.5rem;
-      border-bottom: 2px solid #000000;
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: 32px;
     }
 
-    /* Enhanced back button */
-    /* Clean back button */
     .back-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.65rem 1.25rem;
-      background: #ffffff;
-      border: 2px solid #000000;
+      background: #f5f5f7;
+      border: none;
+      padding: 10px 20px;
       border-radius: 8px;
+      font-size: 14px;
       cursor: pointer;
-      font-size: 0.9rem;
-      font-weight: 600;
-      margin-bottom: 1.5rem;
-      transition: all 0.3s;
-      color: #000000;
+      transition: all 0.2s;
     }
 
-    .back-btn:hover:not(:disabled) {
-      background: #000000;
-      color: #ffffff;
-      transform: translateX(-4px); /* Retained from original */
+    .back-btn:hover {
+      background: #e5e5ea;
     }
 
-    .back-btn:disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
-    }
-
-    /* Enhanced tabs with better styling */
-    /* Minimal tabs */
     .tabs {
       display: flex;
-      gap: 0.5rem;
-      margin-bottom: 2rem;
-      background: #f5f5f5;
-      padding: 0.5rem;
-      border-radius: 8px;
-      border: 2px solid #000000;
+      gap: 8px;
+      margin-bottom: 32px;
+      border-bottom: 1px solid #e5e5ea;
     }
 
-    .tab-btn {
-      flex: 1;
-      padding: 0.85rem 1.5rem;
-      background: transparent;
+    .tab {
+      padding: 12px 24px;
+      background: none;
       border: none;
-      border-radius: 6px;
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: #666666;
+      font-size: 14px;
+      font-weight: 500;
+      color: #8e8e93;
       cursor: pointer;
-      transition: all 0.3s;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
     }
 
-    .tab-btn.active {
-      background: #000000;
-      color: #ffffff;
-      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3); /* This shadow was kept from original */
-    }
-
-    .tab-btn:not(.active):hover {
-      background: #ffffff;
-      color: #000000;
+    .tab.active {
+      color: #5e5ce6;
+      border-bottom-color: #5e5ce6;
     }
 
     .tab-content {
@@ -508,390 +351,101 @@
 
     .tab-content.active {
       display: block;
-      animation: fadeIn 0.3s ease;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Enhanced lesson items */
-    /* Clean lesson items */
-    .lesson-item {
-      padding: 2rem;
-      background: #ffffff;
-      border: 2px solid #000000;
-      border-radius: 12px;
-      margin-bottom: 1.5rem;
-      transition: all 0.3s;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04); /* This shadow was kept from original */
-    }
-
-    .lesson-item:hover {
-      box-shadow: 0 8px 24px rgba(102, 126, 234, 0.12); /* This shadow was kept from original */
-      transform: translateX(4px);
+    .lesson {
+      margin-bottom: 32px;
     }
 
     .lesson-title {
-      font-size: 1.25rem;
-      font-weight: 700;
-      margin-bottom: 0.75rem;
-      color: #000000;
+      font-size: 24px;
+      font-weight: 600;
+      color: #1d1d1f;
+      margin-bottom: 16px;
     }
 
     .lesson-content {
-      margin-top: 1rem;
-      line-height: 1.9;
-      color: #333333;
+      font-size: 16px;
+      color: #1d1d1f;
+      line-height: 1.8;
+      white-space: pre-wrap;
     }
 
-    .lesson-content h3 {
-      font-size: 1.15rem;
-      margin-top: 1.75rem;
-      margin-bottom: 0.85rem;
-      color: #000000;
-      font-weight: 600;
-    }
-
-    .lesson-content p {
-      margin-bottom: 1.25rem;
-    }
-
-    /* Enhanced flashcard viewer */
-    /* Black and white flashcards */
-    .flashcard-viewer {
-      max-width: 650px;
-      margin: 0 auto;
-    }
-
-    .flashcard {
-      background: #000000;
-      color: #ffffff;
-      border: 4px solid #000000;
-      border-radius: 16px;
-      padding: 4rem 3rem;
-      min-height: 350px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.4s;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-      position: relative; /* Retained from original */
-      overflow: hidden; /* Retained from original */
-    }
-
-    .flashcard::before { /* This animation was kept from original */
-      content: '';
-      position: absolute;
-      top: -50%;
-      right: -50%;
-      width: 200%;
-      height: 200%;
-      background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
-      transition: transform 0.6s;
-    }
-
-    .flashcard:hover::before { /* This animation was kept from original */
-      transform: translate(-25%, -25%);
-    }
-
-    .flashcard:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
-    }
-
-    .flashcard.flipped {
-      background: #ffffff;
-      color: #000000;
-      animation: flip 0.6s ease;
-    }
-
-    @keyframes flip {
-      0% { transform: rotateY(0); }
-      50% { transform: rotateY(90deg); }
-      100% { transform: rotateY(0); }
-    }
-
-    .flashcard-text {
-      font-size: 1.65rem;
-      font-weight: 600;
-      line-height: 1.7;
-      position: relative; /* Retained from original */
-      z-index: 1; /* Retained from original */
-    }
-
-    .flashcard-controls {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 2rem;
-      margin-top: 2.5rem;
-    }
-
-    .flashcard-counter {
-      color: #000000;
-      font-weight: 600;
-      font-size: 1rem;
-      padding: 0.5rem 1rem;
-      background: #ffffff;
-      border: 2px solid #000000;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); /* This shadow was kept from original */
-    }
-
-    /* Enhanced quiz questions */
-    /* Clean quiz questions */
     .quiz-question {
-      background: #ffffff;
-      border: 2px solid #000000;
+      background: #f5f5f7;
+      padding: 24px;
       border-radius: 12px;
-      padding: 2.5rem;
-      margin-bottom: 2rem;
-      transition: all 0.3s;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08); /* This shadow was kept from original */
-    }
-
-    .quiz-question:hover {
-      border-color: #667eea; /* This hover effect was kept from original */
+      margin-bottom: 20px;
     }
 
     .question-text {
-      font-size: 1.25rem;
-      font-weight: 700;
-      margin-bottom: 1.75rem;
-      color: #000000;
-      line-height: 1.6;
+      font-size: 16px;
+      font-weight: 600;
+      color: #1d1d1f;
+      margin-bottom: 16px;
     }
 
-    .quiz-options {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    /* Enhanced quiz options */
-    /* Minimal quiz options */
     .quiz-option {
-      padding: 1.25rem 1.75rem;
-      background: #ffffff;
-      border: 2px solid #000000;
+      background: white;
+      padding: 12px 16px;
       border-radius: 8px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .quiz-option:hover {
+      background: #e5e5ea;
+    }
+
+    .flashcard {
+      background: white;
+      border: 1px solid #e5e5ea;
+      border-radius: 12px;
+      padding: 32px;
+      margin-bottom: 16px;
       cursor: pointer;
       transition: all 0.3s;
-      font-weight: 500;
-      color: #000000;
-      position: relative; /* Retained from original */
-      overflow: hidden; /* Retained from original */
-    }
-
-    .quiz-option::before { /* This animation was kept from original */
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      height: 100%;
-      width: 4px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      transform: scaleY(0);
-      transition: transform 0.3s;
-    }
-
-    .quiz-option:hover:not(.correct):not(.incorrect) {
-      background: #f5f5f5;
-      transform: translateX(4px);
-    }
-
-    .quiz-option:hover:not(.correct):not(.incorrect)::before { /* This animation was kept from original */
-      transform: scaleY(1);
-    }
-
-    .quiz-option.selected {
-      background: #f5f5f5;
-    }
-
-    .quiz-option.correct {
-      border-color: #000000;
-      background: #000000;
-      color: #ffffff;
-      font-weight: 700;
-    }
-
-    .quiz-option.correct::before { /* This animation was kept from original */
-      background: #10b981; /* This color was kept from original */
-      transform: scaleY(1);
-    }
-
-    .quiz-option.incorrect {
-      border-color: #999999;
-      background: #f5f5f5;
-      color: #666666;
-      font-weight: 700;
-      text-decoration: line-through;
-    }
-
-    .quiz-option.incorrect::before { /* This animation was kept from original */
-      background: #ef4444; /* This color was kept from original */
-      transform: scaleY(1);
-    }
-
-    /* Enhanced loading state */
-    /* Minimal loading state */
-    .loading {
+      perspective: 1000px;
+      min-height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       text-align: center;
-      padding: 4rem 3rem;
     }
 
-    .spinner {
-      width: 56px;
-      height: 56px;
-      border: 5px solid #f5f5f5;
-      border-top-color: #000000;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin: 0 auto 1.5rem;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    .loading p {
-      font-weight: 600;
-      color: #000000;
-      font-size: 1.1rem;
-    }
-
-    .loading p + p {
-      font-weight: 400;
-      color: #666666;
-      font-size: 0.95rem;
-      margin-top: 0.75rem;
+    .flashcard:hover {
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
     }
 
     .api-status {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.65rem 1.25rem;
-      background: #ffffff;
-      border: 2px solid #000000;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      color: #000000;
-      margin-top: 1rem;
-      font-weight: 600;
-      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2); /* This shadow was kept from original */
+      font-size: 12px;
+      color: #34c759;
+      margin-top: 12px;
+      text-align: center;
     }
 
     .api-status.warning {
-      background: #f5f5f5;
-      border-color: #666666;
-      color: #333333;
-    }
-
-    /* Added preview feature styles */
-    .preview-section {
-      margin-top: 2rem;
-      padding: 2rem;
-      background: #f5f5f5;
-      border-radius: 12px;
-      border: 2px solid #000000;
-    }
-
-    .preview-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1.5rem;
-    }
-
-    .preview-title {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: #000000;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .preview-btn {
-      padding: 0.5rem 1.25rem;
-      background: #000000;
-      color: #ffffff;
-      border: 2px solid #000000;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 0.85rem;
-      font-weight: 600;
-      transition: all 0.3s;
-      box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3); /* This shadow was kept from original */
-    }
-
-    .preview-btn:hover {
-      background: #ffffff;
-      color: #000000;
-      transform: translateY(-2px); /* Retained from original */
-    }
-
-    .preview-content {
-      color: #333333;
-      line-height: 1.8;
-      font-size: 0.95rem;
-    }
-
-    .preview-item {
-      margin-bottom: 1.25rem;
-      padding-bottom: 1.25rem;
-      border-bottom: 1px solid #cccccc;
-    }
-
-    .preview-item:last-child {
-      border-bottom: none;
-    }
-
-    .preview-item-title {
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-      color: #000000;
+      color: #ff9500;
     }
 
     @media (max-width: 1024px) {
       .main-container {
         grid-template-columns: 1fr;
-        gap: 2rem;
-      }
-
-      header {
-        padding: 1rem 1.5rem;
-      }
-
-      .main-container {
-        padding: 2rem 1.5rem;
-      }
-
-      .synthesis-panel {
-        position: static;
-      }
-
-      .archive-panel {
-        min-height: 400px;
+        gap: 40px;
       }
     }
   </style>
 </head>
 <body>
-  <!-- Updated branding to Study Max -->
-  <header>
-    <div class="logo">
+  <header class="header">
+    <div class="logo-section">
       <div class="logo-icon">🎓</div>
       <div class="logo-text">Study Max</div>
     </div>
     <div class="header-actions">
-      <button class="header-btn" onclick="showLibrary()">LIBRARY</button>
-      <div class="action-badge">
+      <button class="library-btn" onclick="showLibrary()">LIBRARY</button>
+      <div class="action-indicator">
         <span class="action-dot"></span>
         ACTION REQUIRED
       </div>
@@ -899,7 +453,7 @@
   </header>
 
   <div class="main-container">
-    <div class="synthesis-panel">
+    <div class="form-panel">
       <div class="panel-header">
         <div class="panel-title">Fast Synthesis Engine</div>
         <div class="lightning-icon">⚡</div>
@@ -908,94 +462,67 @@
       <form id="courseForm">
         <div class="form-group">
           <label class="form-label">Subject Matter</label>
-          <input type="text" class="form-input" id="subject" placeholder="Quantum Physics" required>
+          <input type="text" id="subject" class="form-input" placeholder="Quantum Physics" required>
         </div>
 
         <div class="form-group">
           <label class="form-label">Specific Context</label>
-          <textarea class="form-input" id="context" placeholder="History of Quantum theory" rows="4"></textarea>
+          <textarea id="context" class="form-textarea" placeholder="History of Quantum theory"></textarea>
         </div>
 
         <div class="form-group">
           <label class="form-label">Rigor Level</label>
-          <select class="form-input" id="rigor">
-            <option value="beginner">Beginner</option>
-            <option value="intermediate">Intermediate</option>
-            <option value="advanced">Advanced</option>
-            <option value="expert">Expert</option>
+          <select id="rigor" class="form-select">
+            <option value="Beginner">Beginner</option>
+            <option value="Intermediate">Intermediate</option>
+            <option value="Advanced">Advanced</option>
+            <option value="Expert">Expert</option>
           </select>
         </div>
 
-        <button type="submit" class="synthesize-btn" id="synthesizeBtn">
-          Synthesize Course
-        </button>
+        <button type="submit" id="synthesizeBtn" class="synthesize-btn">Synthesize Course</button>
+        <div id="apiStatus" class="api-status"></div>
       </form>
-
-      <!-- Added preview section -->
-      <div class="preview-section" id="previewSection" style="display: none;">
-        <div class="preview-header">
-          <div class="preview-title">
-            <span>👁️</span>
-            <span>Quick Preview</span>
-          </div>
-          <button class="preview-btn" onclick="togglePreview()">Hide</button>
-        </div>
-        <div class="preview-content" id="previewContent"></div>
-      </div>
     </div>
 
-    <div class="archive-panel" id="archivePanel">
-      <div class="archive-empty" id="emptyState">
-        <div class="archive-icon">📚</div>
-        <div class="archive-title">Your Archive is Empty</div>
-        <div class="archive-subtitle">Ready to transform your knowledge? Describe a topic to start.</div>
+    <div class="content-panel">
+      <div id="emptyState" class="empty-state">
+        <div class="empty-icon">📚</div>
+        <h2 class="empty-title">Your Archive is Empty</h2>
+        <p class="empty-text">Ready to transform your knowledge? Describe a topic to start.</p>
       </div>
 
-      <div class="courses-grid" id="coursesGrid" style="display: none;"></div>
-      <div class="course-detail-view" id="courseDetail" style="display: none;"></div>
-      <div class="loading" id="loadingState" style="display: none;">
+      <div id="loadingState" class="loading-state">
         <div class="spinner"></div>
-        <p>Generating your course...</p>
-        <p>This may take up to 90 seconds</p>
-        <div class="api-status" id="apiStatus"></div>
+        <p class="loading-text">Generating your course...</p>
+      </div>
+
+      <div id="coursesGrid" class="courses-grid"></div>
+
+      <div id="courseDetail" class="course-detail">
+        <div class="detail-header">
+          <h2 id="courseDetailTitle"></h2>
+          <button class="back-btn" onclick="showLibrary()">← Back to Library</button>
+        </div>
+        
+        <div class="tabs">
+          <button class="tab active" onclick="switchTab('lessons')">Lessons</button>
+          <button class="tab" onclick="switchTab('quiz')">Quiz</button>
+          <button class="tab" onclick="switchTab('flashcards')">Flashcards</button>
+        </div>
+
+        <div id="lessonsTab" class="tab-content active"></div>
+        <div id="quizTab" class="tab-content"></div>
+        <div id="flashcardsTab" class="tab-content"></div>
       </div>
     </div>
   </div>
 
   <script>
-    // Configuration
-    const PRIMARY_API = {
-      key: "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",
-      url: "https://openrouter.ai/api/v1/chat/completions",
-      model: "deepseek/deepseek-r1-0528:free"
-    };
-
-    const FALLBACK_APIS = [
-      {
-        name: "Hyperbolic",
-        url: "https://api.hyperbolic.xyz/v1/chat/completions",
-        model: "meta-llama/Llama-3.3-70B-Instruct",
-        key: "none"
-      },
-      {
-        name: "Together AI Free",
-        url: "https://api.together.xyz/v1/chat/completions",
-        model: "meta-llama/Llama-3-70b-chat-hf",
-        key: "none"
-      },
-      {
-        name: "Groq",
-        url: "https://api.groq.com/openai/v1/chat/completions",
-        model: "llama-3.1-70b-versatile",
-        key: "none"
-      }
-    ];
-
     const API_CONFIGS = [
       {
         name: 'OpenRouter',
         url: 'https://openrouter.ai/api/v1/chat/completions',
-        key: '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',
         model: 'deepseek/deepseek-r1-0528:free',
         headers: {
           'Content-Type': 'application/json',
@@ -1007,7 +534,6 @@
       {
         name: 'Hyperbolic',
         url: 'https://api.hyperbolic.xyz/v1/chat/completions',
-        key: 'free',
         model: 'deepseek-ai/DeepSeek-V3',
         headers: {
           'Content-Type': 'application/json'
@@ -1016,198 +542,25 @@
       {
         name: 'Together AI',
         url: 'https://api.together.xyz/v1/chat/completions',
-        key: 'free',
         model: 'meta-llama/Llama-3.3-70B-Instruct-Turbo',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      },
-      {
-        name: 'Groq',
-        url: 'https://api.groq.com/openai/v1/chat/completions',
-        key: 'free',
-        model: 'llama-3.3-70b-versatile',
         headers: {
           'Content-Type': 'application/json'
         }
       }
     ];
 
-    // Storage
     let courses = JSON.parse(localStorage.getItem('studyMaxCourses') || '[]');
     let currentCourse = null;
-    let currentFlashcardIndex = 0; // Renamed from flashcardIndex for clarity
-    let isFlipped = false;
-    let previewData = null; // Added preview data storage
-
-    // Initialize
-    showLibrary(); // Changed from updateUI to showLibrary for initial display
-
-    function showLibrary() {
-      document.getElementById('emptyState').style.display = courses.length === 0 ? 'flex' : 'none';
-      document.getElementById('coursesGrid').style.display = courses.length > 0 ? 'grid' : 'none';
-      document.getElementById('courseDetail').style.display = 'none';
-      document.getElementById('loadingState').style.display = 'none'; // Ensure loading state is hidden
-      
-      if (courses.length > 0) {
-        renderCourses();
-      }
-      currentCourse = null; // Reset currentCourse when showing library
-    }
-
-    function renderCourses() {
-      const grid = document.getElementById('coursesGrid');
-      grid.innerHTML = courses.map(course => `
-        <div class="course-card" onclick="showCourse(${course.id})">
-          <div class="course-header">
-            <div>
-              <div class="course-title">${course.title}</div>
-            </div>
-            <div class="course-badge">${course.rigor}</div>
-          </div>
-          <div class="course-desc">${course.description}</div>
-          <div class="course-meta">
-            <span>📚 ${course.lessons?.length || 0} lessons</span>
-            <span>❓ ${course.quiz?.length || 0} questions</span>
-            <span>🎴 ${course.flashcards?.length || 0} cards</span>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function showCourse(courseId) {
-      currentCourse = courses.find(c => c.id === courseId);
-      if (!currentCourse) return;
-
-      document.getElementById('coursesGrid').style.display = 'none';
-      document.getElementById('emptyState').style.display = 'none';
-      
-      const detailView = document.getElementById('courseDetail');
-      detailView.style.display = 'block';
-      
-      detailView.innerHTML = `
-        <button class="back-btn" onclick="showLibrary()">← Back to Library</button>
-        
-        <div class="detail-header">
-          <h1 style="font-size: 2.25rem; font-weight: 700; margin-bottom: 0.75rem; color: #000000;">${currentCourse.title}</h1>
-          <p style="color: #666666; font-size: 1.1rem; line-height: 1.6;">${currentCourse.description}</p>
-        </div>
-
-        <div class="tabs">
-          <button class="tab-btn active" onclick="switchTab('lessons')">Lessons</button>
-          <button class="tab-btn" onclick="switchTab('quiz')">Quiz</button>
-          <button class="tab-btn" onclick="switchTab('flashcards')">Flashcards</button>
-        </div>
-
-        <div id="lessons-content" class="tab-content active">
-          ${currentCourse.lessons.map((lesson, index) => `
-            <div class="lesson-item">
-              <div class="lesson-title">Lesson ${index + 1}: ${lesson.title}</div>
-              <div class="lesson-content">${lesson.content.replace(/\n\n/g, '</p><p>').replace(/^/, '<p>').replace(/$/, '</p>')}</div>
-            </div>
-          `).join('')}
-        </div>
-
-        <div id="quiz-content" class="tab-content">
-          ${currentCourse.quiz.map((q, index) => `
-            <div class="quiz-question">
-              <div class="question-text">Question ${index + 1}: ${q.question}</div>
-              <div class="quiz-options">
-                ${q.options.map((opt, i) => `
-                  <div class="quiz-option" onclick="checkAnswer(${index}, ${i}, ${q.correctAnswer})">${opt}</div>
-                `).join('')}
-              </div>
-            </div>
-          `).join('')}
-        </div>
-
-        <div id="flashcards-content" class="tab-content">
-          <div class="flashcard-viewer">
-            <div class="flashcard" onclick="flipCard()">
-              <div class="flashcard-text">${currentCourse.flashcards[0].front}</div>
-            </div>
-            <div class="flashcard-controls">
-              <button class="back-btn" onclick="previousCard()">← Previous</button>
-              <div class="flashcard-counter">1 / ${currentCourse.flashcards.length}</div>
-              <button class="back-btn" onclick="nextCard()">Next →</button>
-            </div>
-          </div>
-        </div>
-      `;
-      
-      currentFlashcardIndex = 0;
-      isFlipped = false;
-    }
-
-    function switchTab(tabName) {
-      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-      
-      event.target.classList.add('active');
-      document.getElementById(`${tabName}-content`).classList.add('active');
-    }
-
-    function checkAnswer(questionIndex, selectedIndex, correctIndex) {
-      const options = document.querySelectorAll('.quiz-question')[questionIndex].querySelectorAll('.quiz-option');
-      options.forEach((opt, i) => {
-        opt.style.pointerEvents = 'none';
-        if (i === correctIndex) {
-          opt.classList.add('correct');
-        } else if (i === selectedIndex) {
-          opt.classList.add('incorrect');
-        }
-      });
-    }
-
-    function flipCard() {
-      const card = document.querySelector('.flashcard');
-      const text = document.querySelector('.flashcard-text');
-      const currentCard = currentCourse.flashcards[currentFlashcardIndex];
-      
-      isFlipped = !isFlipped;
-      card.classList.toggle('flipped');
-      
-      setTimeout(() => {
-        text.textContent = isFlipped ? currentCard.back : currentCard.front;
-      }, 300);
-    }
-
-    function nextCard() {
-      if (currentFlashcardIndex < currentCourse.flashcards.length - 1) {
-        currentFlashcardIndex++;
-        updateFlashcard();
-      }
-    }
-
-    function previousCard() {
-      if (currentFlashcardIndex > 0) {
-        currentFlashcardIndex--;
-        updateFlashcard();
-      }
-    }
-
-    function updateFlashcard() {
-      const card = document.querySelector('.flashcard');
-      const text = document.querySelector('.flashcard-text');
-      const counter = document.querySelector('.flashcard-counter');
-      const currentCard = currentCourse.flashcards[currentFlashcardIndex];
-      
-      isFlipped = false;
-      card.classList.remove('flipped');
-      text.textContent = currentCard.front;
-      counter.textContent = `${currentFlashcardIndex + 1} / ${currentCourse.flashcards.length}`;
-    }
 
     async function callAIWithFallback(prompt) {
       const apiStatus = document.getElementById('apiStatus');
       
       for (let i = 0; i < API_CONFIGS.length; i++) {
         const config = API_CONFIGS[i];
-        console.log(`[v0] Attempting API ${i + 1}/${API_CONFIGS.length}: ${config.name}`);
         
         if (apiStatus) {
           apiStatus.textContent = `Trying ${config.name}...`;
-          apiStatus.className = 'api-status';
+          apiStatus.className = 'api-status warning';
         }
 
         try {
@@ -1229,11 +582,18 @@
           clearTimeout(timeoutId);
 
           if (!response.ok) {
-            console.log(`[v0] ${config.name} failed with status: ${response.status}`);
+            const errorText = await response.text().catch(() => 'Unknown error');
+            console.log(`[v0] ${config.name} failed with status ${response.status}: ${errorText}`);
             continue;
           }
 
           const data = await response.json();
+          
+          if (!data || !data.choices || !data.choices[0] || !data.choices[0].message || !data.choices[0].message.content) {
+            console.log(`[v0] ${config.name} returned invalid response structure`);
+            continue;
+          }
+
           console.log(`[v0] Success with ${config.name}`);
           
           if (apiStatus) {
@@ -1252,7 +612,7 @@
           }
           
           if (i === API_CONFIGS.length - 1) {
-            throw new Error('All API providers failed. Please try again later.');
+            throw new Error('All API providers failed. Please check your connection and try again.');
           }
         }
       }
@@ -1310,11 +670,25 @@ Requirements:
         
         let courseData;
         try {
-          const jsonMatch = response.match(/\{[\s\S]*\}/);
-          courseData = JSON.parse(jsonMatch ? jsonMatch[0] : response);
+          // Remove any markdown code blocks or extra text
+          let cleanedResponse = response.trim();
+          
+          // Extract JSON from response
+          const jsonMatch = cleanedResponse.match(/\{[\s\S]*\}/);
+          if (!jsonMatch) {
+            throw new Error('No valid JSON found in response');
+          }
+          
+          courseData = JSON.parse(jsonMatch[0]);
+          
+          if (!courseData.title || !courseData.lessons || !Array.isArray(courseData.lessons)) {
+            throw new Error('Invalid course data structure');
+          }
+          
         } catch (parseError) {
           console.error('[v0] JSON parse error:', parseError);
-          throw new Error('Failed to parse course data');
+          console.error('[v0] Response was:', response);
+          throw new Error('Failed to parse course data. The AI response was not in the expected format.');
         }
 
         courseData.id = Date.now();
@@ -1329,77 +703,95 @@ Requirements:
       } catch (error) {
         console.error('[v0] Course generation error:', error);
         alert('Error generating course: ' + error.message);
-        document.getElementById('emptyState').style.display = 'flex';
+        document.getElementById('emptyState').style.display = 'block';
       } finally {
         document.getElementById('loadingState').style.display = 'none';
         document.getElementById('synthesizeBtn').disabled = false;
       }
     });
-    
-    function togglePreview() {
-      const previewSection = document.getElementById('previewSection');
-      if (previewSection.style.display === 'none') {
-        previewSection.style.display = 'block';
-        // If previewData exists, show it. Otherwise, it will be populated when synthesis starts.
-        if (previewData) {
-          showPreview(previewData);
-        }
+
+    function showLibrary() {
+      document.getElementById('emptyState').style.display = courses.length === 0 ? 'block' : 'none';
+      document.getElementById('coursesGrid').style.display = courses.length > 0 ? 'grid' : 'none';
+      document.getElementById('courseDetail').style.display = 'none';
+      document.getElementById('loadingState').style.display = 'none';
+
+      if (courses.length > 0) {
+        const grid = document.getElementById('coursesGrid');
+        grid.innerHTML = courses.map(course => `
+          <div class="course-card" onclick="showCourse(${course.id})">
+            <h3 class="course-title">${course.title}</h3>
+            <p class="course-description">${course.description || 'No description'}</p>
+            <div class="course-meta">
+              <span>${course.lessons?.length || 0} Lessons</span>
+              <span>${course.quiz?.length || 0} Questions</span>
+              <span>${course.flashcards?.length || 0} Flashcards</span>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    function showCourse(courseId) {
+      currentCourse = courses.find(c => c.id === courseId);
+      if (!currentCourse) return;
+
+      document.getElementById('emptyState').style.display = 'none';
+      document.getElementById('coursesGrid').style.display = 'none';
+      document.getElementById('courseDetail').style.display = 'block';
+
+      document.getElementById('courseDetailTitle').textContent = currentCourse.title;
+
+      // Render lessons
+      const lessonsTab = document.getElementById('lessonsTab');
+      lessonsTab.innerHTML = currentCourse.lessons.map(lesson => `
+        <div class="lesson">
+          <h3 class="lesson-title">${lesson.title}</h3>
+          <div class="lesson-content">${lesson.content}</div>
+        </div>
+      `).join('');
+
+      // Render quiz
+      const quizTab = document.getElementById('quizTab');
+      quizTab.innerHTML = currentCourse.quiz?.map((q, i) => `
+        <div class="quiz-question">
+          <div class="question-text">${i + 1}. ${q.question}</div>
+          ${q.options.map((opt, j) => `
+            <div class="quiz-option" onclick="checkAnswer(${i}, ${j}, ${q.correctAnswer})">${opt}</div>
+          `).join('')}
+        </div>
+      `).join('') || '<p>No quiz questions available</p>';
+
+      // Render flashcards
+      const flashcardsTab = document.getElementById('flashcardsTab');
+      flashcardsTab.innerHTML = currentCourse.flashcards?.map((card, i) => `
+        <div class="flashcard" onclick="this.classList.toggle('flipped')" data-front="${card.front}" data-back="${card.back}">
+          <div><strong>Q:</strong> ${card.front}</div>
+          <div style="margin-top: 16px; color: #8e8e93; font-size: 14px;">Click to reveal answer</div>
+        </div>
+      `).join('') || '<p>No flashcards available</p>';
+
+      switchTab('lessons');
+    }
+
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+      
+      event.target.classList.add('active');
+      document.getElementById(tabName + 'Tab').classList.add('active');
+    }
+
+    function checkAnswer(questionIndex, selectedOption, correctAnswer) {
+      if (selectedOption === correctAnswer) {
+        alert('Correct!');
       } else {
-        previewSection.style.display = 'none';
+        alert('Incorrect. The correct answer is option ' + (correctAnswer + 1));
       }
     }
 
-    function showPreview(data) {
-      const previewContent = document.getElementById('previewContent');
-      const previewSection = document.getElementById('previewSection');
-      
-      previewData = data; // Store the data for potential later use
-      
-      let previewHTML = '';
-      
-      if (data.lessons && data.lessons.length > 0) {
-        previewHTML += `
-          <div class="preview-item">
-            <h4 class="preview-item-title">📖 Lessons Preview (${data.lessons.length} total)</h4>
-            <p><strong>${escapeHtml(data.lessons[0].title)}</strong></p>
-            <p>${escapeHtml(data.lessons[0].content.substring(0, 150))}...</p>
-          </div>
-        `;
-      }
-      
-      if (data.quiz && data.quiz.length > 0) {
-        previewHTML += `
-          <div class="preview-item">
-            <h4 class="preview-item-title">🎯 Quizzes Preview (${data.quiz.length} questions)</h4>
-            <p><strong>Q:</strong> ${escapeHtml(data.quiz[0].question)}</p>
-            <p><strong>A:</strong> ${escapeHtml(data.quiz[0].options[data.quiz[0].correctAnswer])}</p>
-          </div>
-        `;
-      }
-      
-      if (data.flashcards && data.flashcards.length > 0) {
-        previewHTML += `
-          <div class="preview-item">
-            <h4 class="preview-item-title">📇 Flashcards Preview (${data.flashcards.length} cards)</h4>
-            <p><strong>Front:</strong> ${escapeHtml(data.flashcards[0].front)}</p>
-            <p><strong>Back:</strong> ${escapeHtml(data.flashcards[0].back)}</p>
-          </div>
-        `;
-      }
-      
-      previewContent.innerHTML = previewHTML;
-      previewSection.style.display = 'block'; // Ensure the section is visible
-    }
-
-    // Helper to escape HTML for security and proper display
-    function escapeHtml(text) {
-      const div = document.createElement('div');
-      div.textContent = text;
-      return div.innerHTML;
-    }
-
+    // Initialize
+    showLibrary();
   </script>
 </body>
 </html>
-
-
