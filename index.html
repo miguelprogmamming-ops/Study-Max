@@ -530,22 +530,6 @@
           'HTTP-Referer': window.location.origin,
           'X-Title': 'Study Max'
         }
-      },
-      {
-        name: 'Hyperbolic',
-        url: 'https://api.hyperbolic.xyz/v1/chat/completions',
-        model: 'deepseek-ai/DeepSeek-V3',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      },
-      {
-        name: 'Together AI',
-        url: 'https://api.together.xyz/v1/chat/completions',
-        model: 'meta-llama/Llama-3.3-70B-Instruct-Turbo',
-        headers: {
-          'Content-Type': 'application/json'
-        }
       }
     ];
 
@@ -584,13 +568,18 @@
           if (!response.ok) {
             const errorText = await response.text().catch(() => 'Unknown error');
             console.log(`[v0] ${config.name} failed with status ${response.status}: ${errorText}`);
+            
+            if (response.status === 401) {
+              throw new Error(`${config.name} authentication failed. Please check your API key.`);
+            }
+            
             continue;
           }
 
           const data = await response.json();
           
           if (!data || !data.choices || !data.choices[0] || !data.choices[0].message || !data.choices[0].message.content) {
-            console.log(`[v0] ${config.name} returned invalid response structure`);
+            console.log(`[v0] ${config.name} returned invalid response structure:`, data);
             continue;
           }
 
@@ -607,12 +596,12 @@
           console.log(`[v0] ${config.name} error:`, error.message);
           
           if (apiStatus) {
-            apiStatus.textContent = `${config.name} failed, trying next...`;
+            apiStatus.textContent = `${config.name} failed: ${error.message}`;
             apiStatus.className = 'api-status warning';
           }
           
           if (i === API_CONFIGS.length - 1) {
-            throw new Error('All API providers failed. Please check your connection and try again.');
+            throw new Error(`API Error: ${error.message}. Please verify your API key is valid and active.`);
           }
         }
       }
@@ -670,25 +659,38 @@ Requirements:
         
         let courseData;
         try {
-          // Remove any markdown code blocks or extra text
+          if (!response || response.trim() === '') {
+            throw new Error('Empty response from AI');
+          }
+          
           let cleanedResponse = response.trim();
           
-          // Extract JSON from response
+          cleanedResponse = cleanedResponse.replace(/\`\`\`json\s*/g, '').replace(/\`\`\`\s*/g, '');
+          
           const jsonMatch = cleanedResponse.match(/\{[\s\S]*\}/);
           if (!jsonMatch) {
+            console.error('[v0] No JSON found in response:', cleanedResponse);
             throw new Error('No valid JSON found in response');
           }
           
           courseData = JSON.parse(jsonMatch[0]);
           
-          if (!courseData.title || !courseData.lessons || !Array.isArray(courseData.lessons)) {
-            throw new Error('Invalid course data structure');
+          if (!courseData.title || !courseData.lessons || !Array.isArray(courseData.lessons) || courseData.lessons.length === 0) {
+            console.error('[v0] Invalid course structure:', courseData);
+            throw new Error('Invalid course data structure - missing required fields');
+          }
+          
+          if (!courseData.quiz || !Array.isArray(courseData.quiz)) {
+            courseData.quiz = [];
+          }
+          if (!courseData.flashcards || !Array.isArray(courseData.flashcards)) {
+            courseData.flashcards = [];
           }
           
         } catch (parseError) {
           console.error('[v0] JSON parse error:', parseError);
           console.error('[v0] Response was:', response);
-          throw new Error('Failed to parse course data. The AI response was not in the expected format.');
+          throw new Error(`Failed to parse course data: ${parseError.message}`);
         }
 
         courseData.id = Date.now();
@@ -702,7 +704,7 @@ Requirements:
 
       } catch (error) {
         console.error('[v0] Course generation error:', error);
-        alert('Error generating course: ' + error.message);
+        alert('Error: ' + error.message + '\n\nPlease try again or check the console for more details.');
         document.getElementById('emptyState').style.display = 'block';
       } finally {
         document.getElementById('loadingState').style.display = 'none';
@@ -742,7 +744,6 @@ Requirements:
 
       document.getElementById('courseDetailTitle').textContent = currentCourse.title;
 
-      // Render lessons
       const lessonsTab = document.getElementById('lessonsTab');
       lessonsTab.innerHTML = currentCourse.lessons.map(lesson => `
         <div class="lesson">
@@ -751,7 +752,6 @@ Requirements:
         </div>
       `).join('');
 
-      // Render quiz
       const quizTab = document.getElementById('quizTab');
       quizTab.innerHTML = currentCourse.quiz?.map((q, i) => `
         <div class="quiz-question">
@@ -762,7 +762,6 @@ Requirements:
         </div>
       `).join('') || '<p>No quiz questions available</p>';
 
-      // Render flashcards
       const flashcardsTab = document.getElementById('flashcardsTab');
       flashcardsTab.innerHTML = currentCourse.flashcards?.map((card, i) => `
         <div class="flashcard" onclick="this.classList.toggle('flipped')" data-front="${card.front}" data-back="${card.back}">
